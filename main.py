@@ -129,16 +129,16 @@ async def get_all_trash_info():
     plants = db.child("Trash").get()
     return Response(json.dumps(plants.val(), indent=2))
 
+@app.get('/trash/{id}')
+async def get_trash_details(id: int):
+    plants = db.child("Trash").get()
+    return Response(json.dumps(plants.val()[id], indent=2))
+
 @app.get('/Users')
 async def get_all_user(current_user: User = Depends(get_current_active_user)):
     users = db.child("Users").get()
     return Response(json.dumps(users.val(), indent=2))
-
-@app.get('/trash/{id}')
-async def get_plant_details(id: int):
-    plants = db.child("Trash").get()
-    return Response(json.dumps(plants.val()[id], indent=2))
-
+    
 @app.get('/sensor')
 async def get_water_level(current_user: User = Depends(get_current_active_user)):
     water_level = db.child("Sensor").child("value").get()
