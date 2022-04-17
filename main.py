@@ -134,27 +134,27 @@ async def get_trash_details(id: int):
     plants = db.child("Trash").get()
     return Response(json.dumps(plants.val()[id], indent=2))
 
-@app.get('/Users')
+@app.get('/users')
 async def get_all_user(current_user: User = Depends(get_current_active_user)):
     users = db.child("Users").get()
     return Response(json.dumps(users.val(), indent=2))
-    
-@app.get('/sensor')
-async def get_water_level(current_user: User = Depends(get_current_active_user)):
-    water_level = db.child("Sensor").child("value").get()
-    return Response(json.dumps(water_level.val(), indent=2))
 
-@app.patch('/actuator/{status}')
-async def on_off_water_pump(status: str, current_user: User = Depends(get_current_active_user)):
-    if (status != "on") and (status != "off"):
-        return "Input False"
-    else:
-        db.child("Sensor").child("message").set(status)
-        return Response(json.dumps(db.child("Sensor").child("message").get().val(), indent=2))
+# @app.get('/sensor')
+# async def get_water_level(current_user: User = Depends(get_current_active_user)):
+#     water_level = db.child("Sensor").child("value").get()
+#     return Response(json.dumps(water_level.val(), indent=2))
+
+# @app.patch('/actuator/{status}')
+# async def on_off_water_pump(status: str, current_user: User = Depends(get_current_active_user)):
+#     if (status != "on") and (status != "off"):
+#         return "Input False"
+#     else:
+#         db.child("Sensor").child("message").set(status)
+#         return Response(json.dumps(db.child("Sensor").child("message").get().val(), indent=2))
 
 @app.post('/user/{username}')
-async def add_user(username: str, password: str, email:str, name:str, photo_url:str, current_user: User = Depends(get_current_active_user)):
-    data = {"username" : username, "password" : password, "email_address": email, "nama": name, "url_photo_profile": photo_url}
-    db.child("Users").child(username).set(data)
-    user = db.child("Users").child(username).get().val()
+async def add_user(username: str, email:str, id:str, current_user: User = Depends(get_current_active_user)):
+    data = {"username" : username, "email": email, "id": id}
+    db.child("Users").child(id).set(data)
+    user = db.child("Users").child(id).get().val()
     return Response(json.dumps(user, indent=2))
